@@ -1,36 +1,45 @@
 "use client";
-import { Text, Link as FluentLink } from "@fluentui/react-components";
+import { Text, Link as FluentLink, Divider, tokens } from "@fluentui/react-components";
 import NextLink from "next/link";
-
 
 export default function Footer() {
     return (
-        <footer className="mt-10 border-t" style={{ backgroundColor: "var(--colorNeutralBackground2)", borderColor: "var(--colorNeutralStroke2)" }}>
+        <footer
+            style={{
+                backgroundColor: tokens.colorNeutralBackground2,
+                borderTop: `1px solid ${tokens.colorNeutralStroke2}`,
+                marginTop: tokens.spacingVerticalXXXL,
+            }}
+        >
             <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                        
-                        <Text size={300}>Extension Plaza</Text>
-                    </div>
-                    <Text size={200} style={{ color: "var(--colorNeutralForeground2)" }}>探索并安装社区插件，提升你的产品力。</Text>
+                <div className="flex flex-col gap-2">
+                    <NextLink href="/" className="flex items-center gap-2 ">
+                        <img
+                            alt={"Plugin Plaza"}
+                            src={"/images/logo.png"}
+                            className="w-9 h-9 object-contain"
+                        />
+                        <Text weight="bold" className="!text-[18px]">插件广场</Text>
+                    </NextLink>
+                    <Text size={200} style={{ color: tokens.colorNeutralForeground2 }}>使用适用于 Class Widgets 2 的插件和主题让课程表如虎添翼</Text>
                 </div>
-                <div className="space-y-2">
+
+                <div className="flex flex-col gap-2 md:col-start-3">
                     <Text weight="semibold" size={300}>关于</Text>
-                    <NextLink href="#" className="text-sm hover:underline" style={{ color: "var(--colorNeutralForeground2)" }}>项目介绍</NextLink>
-                    <NextLink href="#" className="text-sm hover:underline" style={{ color: "var(--colorNeutralForeground2)" }}>更新日志</NextLink>
+                    <NextLink href="/about" passHref><FluentLink appearance="subtle"><Text size={200}>项目介绍</Text></FluentLink></NextLink>
                 </div>
-                <div className="space-y-2">
-                    <Text weight="semibold" size={300}>帮助</Text>
-                    <NextLink href="#" className="text-sm hover:underline" style={{ color: "var(--colorNeutralForeground2)" }}>常见问题</NextLink>
-                    <NextLink href="#" className="text-sm hover:underline" style={{ color: "var(--colorNeutralForeground2)" }}>反馈问题</NextLink>
-                </div>
-                <div className="space-y-2">
-                    <Text weight="semibold" size={300}>链接</Text>
-                    <FluentLink href="https://github.com" appearance="subtle">GitHub</FluentLink>
-                    <FluentLink href="https://apps.microsoft.com/home?hl=zh-CN&gl=US" appearance="subtle" target="_blank">Microsoft Store</FluentLink>
+
+
+                <div className="flex flex-col gap-2">
+                    <Text weight="semibold" size={300}>更多内容</Text>
+                    <FluentLink href="https://cw.rinlit.cn" appearance="subtle" target="_blank"><Text size={200}>Class Widgets</Text></FluentLink>
+                    <FluentLink href="https://github.com/RinLit-233-shiroko/Class-Widgets-2" appearance="subtle" target="_blank"><Text size={200}>Class Widgets 2 仓库</Text></FluentLink>
                 </div>
             </div>
-            <div className="px-4 max-w-6xl mx-auto pb-8 text-xs" style={{ color: "var(--colorNeutralForeground3)" }}>© 2025 Extension Plaza — Made with ❤ by Rin酱</div>
+            <Divider />
+            <div className="px-4 max-w-6xl mx-auto pb-8 text-center">
+                <Text size={200} style={{ color: tokens.colorNeutralForeground3 }}>© 2025 Class Widgets</Text>
+            </div>
         </footer>
     );
 }
