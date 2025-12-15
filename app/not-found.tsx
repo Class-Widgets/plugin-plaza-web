@@ -1,11 +1,28 @@
 "use client";
 
+import * as React from "react";
+
 import NextLink from 'next/link';
 import Image from 'next/image';
 import { Text, Button, Link as FluentLink, SearchBox } from "@fluentui/react-components";
 import { SearchRegular } from "@fluentui/react-icons";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 gap-2">
       <div className="mb-4 mt-[-15vh]">
@@ -32,6 +49,9 @@ export default function NotFound() {
         <SearchBox
             placeholder="搜索任意插件或主题..."
             className="w-auto"
+            value={searchQuery}
+            onChange={(e, data) => setSearchQuery(data.value || "")}
+            onKeyDown={handleKeyDown}
         />
       </div>
     </div>

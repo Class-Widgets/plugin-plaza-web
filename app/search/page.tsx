@@ -42,7 +42,7 @@ export default function SearchPage() {
   }, [query]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl min-h-screen mx-auto px-4 py-8">
       <Text as="h1" className="!text-3xl !font-semibold">
        “{query}” 的结果
       </Text>
@@ -64,7 +64,7 @@ export default function SearchPage() {
         <div className="ml-auto">
           <Menu>
             <MenuTrigger disableButtonEnhancement>
-              <Button icon={<FilterRegular />}>筛选器</Button>
+              {/*<Button icon={<FilterRegular />}>筛选器</Button>*/}
             </MenuTrigger>
             <MenuPopover>
               <MenuList>
