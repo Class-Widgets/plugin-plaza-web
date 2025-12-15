@@ -67,32 +67,49 @@ export default function Header() {
     );
 }
 
-// 新增：HeaderTabs 组件，使用 Fluent TabList 进行标签导航
+
 function HeaderTabs() {
-  const router = useRouter();
-  const pathname = usePathname();
+    const router = useRouter();
+    const pathname = usePathname();
 
-  const tabs = [
-    { label: "主页", value: "home", href: "/" },
-    { label: "插件", value: "plugins", href: "/plugins" },
-    { label: "主题", value: "themes", href: "/themes" },
-    { label: "关于", value: "about", href: "/404" },
-  ];
+    const tabs = [
+        { label: "主页", value: "home", href: "/" },
+        { label: "插件", value: "plugins", href: "/plugins" },
+        { label: "主题", value: "themes", href: "/themes" },
+        { label: "关于", value: "about", href: "/404" },
+    ];
 
-  const selected = pathname === "/" ? "home" : (pathname?.startsWith("/search") ? "plugins" : "home");
+    let selected = "home";
 
-  const onTabSelect: any = (_e: any, data: any) => {
-    const target = tabs.find(t => t.value === data.value);
-    if (target && target.href && target.href !== "#") {
-      router.push(target.href);
+    if (pathname === "/") {
+        selected = "home";
     }
-  };
 
-  return (
-    <TabList size="medium" selectedValue={selected} onTabSelect={onTabSelect}>
-      {tabs.map(t => (
-        <Tab key={t.value} value={t.value}>{t.label}</Tab>
-      ))}
-    </TabList>
-  );
+    else {
+        const matchedTab = tabs.findLast((tab) => {
+            // 检查：href 不是 / 且 pathname 确实以 href 开头
+            return tab.href !== "/" && pathname?.startsWith(tab.href);
+        });
+        if (matchedTab) {
+            selected = matchedTab.value;
+        }
+        else if (pathname?.startsWith("/search")) {
+            selected = "home";
+        }
+    }
+
+    const onTabSelect: any = (_e: any, data: any) => {
+        const target = tabs.find(t => t.value === data.value);
+        if (target && target.href && target.href !== "#") {
+            router.push(target.href);
+        }
+    };
+
+    return (
+        <TabList size="medium" selectedValue={selected} onTabSelect={onTabSelect}>
+            {tabs.map(t => (
+                <Tab key={t.value} value={t.value}>{t.label}</Tab>
+            ))}
+        </TabList>
+    );
 }
