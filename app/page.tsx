@@ -2,7 +2,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 // 使用动态导入禁用 SSR，避免水合期间的 ID 不一致
-const Hero = dynamic(() => import("@/app/components/Store/Hero"), { ssr: false });
+const Banner = dynamic(() => import("@/app/components/Store/Banner"), { ssr: false });
 import PluginSectionTable from "@/app/components/Plugin/PluginSectionTable";
 import PluginGrid from "@/app/components/Plugin/PluginGrid";
 // import PluginCardRounded from "@/app/components/Plugin/PluginCardRounded";
@@ -24,7 +24,7 @@ export default function StoreHome() {
   return (
     <div className="flex flex-col gap-6">
       {/* 顶部视觉区（不含搜索与分类 nav） */}
-      <Hero plugins={plugins} />
+      <Banner plugins={plugins} />
 
       {/* 分区：采用 PluginSectionTable 组件 */}
         <div className="flex flex-col gap-4">
