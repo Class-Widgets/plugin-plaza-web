@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
-import { getManifest, parseGitHubRepo } from "@/lib/pluginUtils";
+import { getManifest, parseGitHubRepo, processReadmeImages } from "@/lib/pluginUtils";
 import { pickMirrorFor } from "@/lib/mirrorUtils";
+
+const readmeCache: Record<string, { content: string; timestamp: number }> = {};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export async function GET(_req: Request, ctx: { params: Promise<{ pluginId: string }> }) {
     const { pluginId } = await ctx.params;
+
+    // 检查缓存
+    const cached = readmeCache[pluginId];
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+        return new NextResponse(cached.content, {
+            status: 200,
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+    }
+
     const manifest = getManifest(pluginId);
     let readmeUrl = manifest.readme;
 
@@ -19,7 +32,12 @@ export async function GET(_req: Request, ctx: { params: Promise<{ pluginId: stri
     try {
         const res = await fetch(readmeUrl);
         if (!res.ok) throw new Error(`fetch failed with status ${res.status}`);
-        const text = await res.text();
+        let text = await res.text();
+        const branch = manifest.branch || "main"; // 确保 branch 可用
+        text = await processReadmeImages(text, manifest.url, branch, pickMirrorFor);
+
+        // 存储到缓存
+        readmeCache[pluginId] = { content: text, timestamp: Date.now() };
 
         return new NextResponse(text, {
             status: 200,
