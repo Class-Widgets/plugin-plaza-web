@@ -2,12 +2,21 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Text, Card, Skeleton, SkeletonItem, Divider } from "@fluentui/react-components";
+import { Button, Text, Card, Skeleton, SkeletonItem, Divider, SplitButton, Menu, MenuTrigger, MenuPopover, MenuList, MenuItem } from "@fluentui/react-components";
 import { marked } from "marked";
 import PluginList from "@/app/components/Plugin/PluginList";
 import DOMPurify from "dompurify";
 // import tagsMap from "@/app/data/tags.json"; // 已迁移到GitHub，通过API获取
-import { TagRegular, InfoRegular, CodeRegular, BranchRegular, PersonRegular, ClockRegular } from "@fluentui/react-icons";
+import {
+  TagRegular,
+  InfoRegular,
+  CodeRegular,
+  BranchRegular,
+  PersonRegular,
+  ClockRegular,
+  ArrowDownloadRegular,
+  ChevronDownRegular
+} from "@fluentui/react-icons";
 
 // README 渲染（支持 GitHub 风格 admonition + 占位符解析）
 const preprocessReadme = (md: string, manifest?: any) => {
@@ -94,7 +103,21 @@ export default function PluginDetailPage() {
   const [tagsMap, setTagsMap] = React.useState<Record<string, any>>({});
 
   const iconSrc = React.useMemo(() => `/api/plugins/${pluginId}/resources/icon`, [pluginId]);
-  const releaseZipUrl = React.useMemo(() => `/api/plugins/${pluginId}/resources/release`, [pluginId]);
+  const releaseZipUrl = React.useMemo(() => `/api/plugins/${pluginId}/resources/release?format=zip`, [pluginId]);
+  const releaseCwpluginUrl = React.useMemo(() => `/api/plugins/${pluginId}/resources/release?format=cwplugin`, [pluginId]);
+  const releasePageUrl = React.useMemo(() => {
+    if (!manifest?.url) return null;
+    try {
+      const u = new URL(manifest.url);
+      if (u.hostname === "github.com") {
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts.length >= 2) {
+          return `https://github.com/${parts[0]}/${parts[1]}/releases`;
+        }
+      }
+    } catch {}
+    return null;
+  }, [manifest]);
 
   React.useEffect(() => {
     // 加载 manifest
@@ -222,7 +245,46 @@ export default function PluginDetailPage() {
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">{manifest.description}</div>
               <div className="flex items-center gap-2 pt-2">
-                <Link href={releaseZipUrl} className="inline-block"><Button appearance="primary">下载</Button></Link>
+                {manifest && releasePageUrl ? (
+                    <Menu positioning="below-end">
+                      <MenuTrigger disableButtonEnhancement>
+                        {(triggerProps) => (
+                            <SplitButton
+                                appearance={"primary"}
+                                primaryActionButton={{
+                                  onClick: () => window.open(releaseCwpluginUrl, "_blank"),
+                                }}
+                                icon={<ArrowDownloadRegular/>}
+                                menuButton={triggerProps}
+                                menuIcon={<ChevronDownRegular style={{ marginBottom: "1.75em" }}/>}
+                            >
+                              下载
+                            </SplitButton>
+                        )}
+                      </MenuTrigger>
+
+                      <MenuPopover>
+                        <MenuList>
+                          <MenuItem onClick={() => window.open(releaseZipUrl, "_blank")}>
+                            下载 ZIP 文件
+                          </MenuItem>
+                          <MenuItem onClick={() => window.open(releaseCwpluginUrl, "_blank")}>
+                            下载 Class Widgets 插件
+                          </MenuItem>
+                          <MenuItem onClick={() => window.open(releasePageUrl, "_blank")}>
+                            访问 Release 页面
+                          </MenuItem>
+                        </MenuList>
+                      </MenuPopover>
+                    </Menu>
+                ) : (
+                  <Link href={releaseZipUrl} className="inline-block">
+                    <Button appearance="primary">
+                      <ArrowDownloadRegular style={{ fontSize: 16, marginRight: 8 }} />
+                      下载
+                    </Button>
+                  </Link>
+                )}
                 <Button appearance="secondary" onClick={() => router.back()}>返回</Button>
               </div>
             </>

@@ -3,14 +3,21 @@ import { NextResponse } from "next/server";
 import { getManifestFromGitHub, parseGitHubRepo } from "@/lib/pluginUtils";
 import { pickMirrorFor } from "@/lib/mirrorUtils";
 
-export async function GET(_req: Request, ctx: { params: Promise<{ pluginId: string }> }) {
+export async function GET(req: Request, ctx: { params: Promise<{ pluginId: string }> }) {
     try {
         const { pluginId } = await ctx.params;
-        const manifest = await getManifestFromGitHub(pluginId);
+        const url = new URL(req.url);
+        const format = url.searchParams.get('format') || 'cwplugin';
+        
+        if (!['zip', 'cwplugin'].includes(format)) {
+            return NextResponse.json({ error: 'Invalid format parameter. Use "zip" or "cwplugin"' }, { status: 400 });
+        }
 
-        let releaseUrl = `${manifest.url}/releases/latest/download/${manifest.id}.zip`;
+        const manifest = await getManifestFromGitHub(pluginId);
+        
+        let releaseUrl = `${manifest.url}releases/latest/download/${manifest.id}.${format}`;
         const mirror = await pickMirrorFor(releaseUrl);
-        releaseUrl = releaseUrl.replace("https://github.com", mirror);
+        releaseUrl = `${mirror}/${releaseUrl}`;
 
         return NextResponse.redirect(releaseUrl);
     } catch (err: any) {
