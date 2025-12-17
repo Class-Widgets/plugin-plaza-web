@@ -66,7 +66,7 @@ export default function Banner({ plugins }: { plugins?: PluginInfo[] }) {
     { image: "/BannerWelcome.png", title: "欢迎来到插件广场", desc: "精选扩展与主题，提升你的浏览体验。" },
   ];
 
-  const heightClass = "h-72 md:h-80";
+  const heightClass = "h-56 sm:h-64 md:h-80";
 
   const s1 = {
     kind: "icons" as const,
@@ -98,21 +98,21 @@ export default function Banner({ plugins }: { plugins?: PluginInfo[] }) {
                         <div
                             className="
                       absolute inset-0 flex flex-col items-center justify-center
-                      p-6 bg-linear-to-br from-[#68C6E9] to-[#62F9BD]
+                      p-4 sm:p-6 bg-linear-to-br from-[#68C6E9] to-[#62F9BD]
                       dark:bg-radial-[at_50%_100%] dark:from-[#1CCFD5] dark:to-[#143E73]
                     "
                         >
-                          <Text weight="bold" size={700} className="text-center">
+                          <Text weight="bold" size={700} className="text-center text-sm sm:text-base md:text-lg">
                             {s.title}
                           </Text>
-                          <Text size={400} className="mt-2 text-center">
+                          <Text size={400} className="mt-2 text-center text-xs sm:text-sm">
                             {s.subtitle}
                           </Text>
-                          <div className="mt-6 flex flex-wrap items-center justify-center gap-5">
+                          <div className="mt-4 sm:mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
                             {s.plugins.map((p) => (
                                 <Tooltip key={p.id} content={p.name} relationship="label">
                                   <Link href={`/plugins/${p.id}`} className="block" aria-label={p.name}>
-                                    <div className="relative w-16 h-16 rounded-2xl bg-white/70 shadow-sm ring-1 ring-black/5">
+                                    <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/70 shadow-sm ring-1 ring-black/5">
                                       {!iconLoaded[p.id] && (
                                           <Skeleton animation="wave" className="absolute inset-0">
                                             <SkeletonItem style={{ width: "100%", height: "100%", borderRadius: 16 }} />
@@ -141,13 +141,17 @@ export default function Banner({ plugins }: { plugins?: PluginInfo[] }) {
                           <img
                               src={s.banner.image}
                               alt={s.banner.title ?? "banner"}
-                              className="absolute inset-0 w-full h-full object-cover"
+                              className="
+                                absolute inset-0 w-full h-full
+                                object-cover
+                                object-[center_top] sm:object-center
+                              "
                               onLoad={() => setBannerImgLoaded((prev) => ({ ...prev, [idx]: true }))}
                               onError={() => setBannerImgLoaded((prev) => ({ ...prev, [idx]: true }))}
                           />
-                          <div className="absolute bottom-0 left-0 right-0 h-14 text-center bg-gradient-to-t from-black/25 to-transparent flex items-center justify-center">
+                          <div className="absolute bottom-0 left-0 right-0 h-10 sm:h-14 text-center bg-gradient-to-t from-black/25 to-transparent flex items-center justify-center">
                             {s.banner.desc ? (
-                                <div className="banner-text-content text-white" dangerouslySetInnerHTML={{ __html: s.banner.desc }} />
+                                <div className="banner-text-content text-white text-xs sm:text-sm px-2" dangerouslySetInnerHTML={{ __html: s.banner.desc }} />
                             ) : null}
                           </div>
                         </div>
