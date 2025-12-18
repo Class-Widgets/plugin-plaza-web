@@ -15,7 +15,8 @@ import {
   PersonRegular,
   ClockRegular,
   ArrowDownloadRegular,
-  ChevronDownRegular
+  ChevronDownRegular,
+  ShareRegular
 } from "@fluentui/react-icons";
 
 // README 渲染（支持 GitHub 风格 admonition + 占位符解析）
@@ -199,6 +200,13 @@ export default function PluginDetailPage() {
   }, [manifest]);
 
   const sectionTags = React.useMemo(() => (Array.isArray(manifest?.tags) ? manifest?.tags : []), [manifest]);
+
+  // 动态更新页面标题
+  React.useEffect(() => {
+    if (manifest?.name) {
+      document.title = `${manifest.name} - Class Widgets 插件广场(测试)`;
+    }
+  }, [manifest]);
   
   // 获取标签名称的函数，现在在组件内部定义，可以访问 tagsMap
   const getTagName = React.useCallback((id?: string) => {
@@ -289,6 +297,21 @@ export default function PluginDetailPage() {
                       </Link>
                   )}
                 </div>
+                {/* 分享按钮 */}
+                <Button 
+                  appearance="secondary" 
+                  icon={<ShareRegular />}
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: document.title,
+                        text: manifest ? `${manifest.description} —— Class Widgets 插件广场` : 'Class Widgets 插件广场',
+                        url: window.location.href
+                      });
+                    }
+                  }}
+                  aria-label="分享插件"
+                />
               </div>
             </>
           ) : (
