@@ -102,7 +102,7 @@ export default function PluginDetailPage() {
   const [isLoadingReleaseDate, setIsLoadingReleaseDate] = React.useState(true);
   const [tagsMap, setTagsMap] = React.useState<Record<string, any>>({});
 
-  const iconSrc = React.useMemo(() => `/api/plugins/${pluginId}/resources/icon`, [pluginId]);
+  const [iconSrc, setIconSrc] = React.useState<string>(`/api/plugins/${pluginId}/resources/icon`);
   const releaseZipUrl = React.useMemo(() => `/api/plugins/${pluginId}/resources/release?format=zip`, [pluginId]);
   const releaseCwpluginUrl = React.useMemo(() => `/api/plugins/${pluginId}/resources/release?format=cwplugin`, [pluginId]);
   const releasePageUrl = React.useMemo(() => {
@@ -223,6 +223,7 @@ export default function PluginDetailPage() {
             alt={manifest?.name || String(pluginId)}
             className={`w-24 h-24 object-contain ${iconLoaded ? "" : "hidden"}`}
             onLoad={() => setIconLoaded(true)}
+            onError={() => { setIconLoaded(true); setIconSrc("/images/default_plugin.png"); }}
           />
         </div>
          <div className="flex-1 min-w-0 space-y-2 text-center sm:text-left">

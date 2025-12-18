@@ -1,15 +1,21 @@
 "use client";
 import Link from "next/link";
 import { Card, Text } from "@fluentui/react-components";
+import * as React from "react";
 
 export default function PluginCardRounded({ plugin }: { plugin: any }) {
-  const iconSrc = `/api/plugins/${plugin.id}/resources/icon`;
+  const [iconSrc, setIconSrc] = React.useState<string>(`/api/plugins/${plugin.id}/resources/icon`);
   return (
     <Link href={`/plugins/${plugin.id}`} className="block">
       <Card className="h-full cursor-pointer hover:shadow-md transition-all border border-gray-200 dark:border-gray-800 p-2">
         <div className="rounded-2xl overflow-hidden mb-3 bg-white dark:bg-gray-900 shadow-sm">
           <div className="p-2">
-            <img src={iconSrc} alt={plugin.name} className="w-full h-36 object-cover rounded-xl" />
+            <img 
+              src={iconSrc} 
+              alt={plugin.name} 
+              className="w-full h-36 object-cover rounded-xl" 
+              onError={() => setIconSrc("/images/default_plugin.png")} 
+            />
           </div>
         </div>
         <div className="space-y-1">

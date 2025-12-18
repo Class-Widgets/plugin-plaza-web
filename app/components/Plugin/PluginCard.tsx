@@ -42,12 +42,12 @@ export default function PluginCard({ plugin, isLoading }: PluginCardProps) {
   const router = useRouter();
 
   // 图标加载（通过 API 获取）
-  const initialIcon = hasId ? `/api/plugins/${plugin.id}/resources/icon` : "/vercel.svg";
+  const initialIcon = hasId ? `/api/plugins/${plugin.id}/resources/icon` : "/images/default_plugin.png";
   const [imgSrc, setImgSrc] = React.useState<string>(initialIcon);
   const [iconLoading, setIconLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    const nextSrc = hasId ? `/api/plugins/${plugin.id}/resources/icon` : "/vercel.svg";
+    const nextSrc = hasId ? `/api/plugins/${plugin.id}/resources/icon` : "/images/default_plugin.png";
     setImgSrc(nextSrc);
     setIconLoading(true);
   }, [plugin?.id, hasId]);
@@ -118,7 +118,7 @@ export default function PluginCard({ plugin, isLoading }: PluginCardProps) {
               alt={plugin?.name ?? "icon"}
               className="absolute inset-0 w-full h-full object-contain border-gray-300 dark:border-gray-500 border-1 rounded-2xl"
               onLoad={() => setIconLoading(false)}
-              onError={() => { setImgSrc("/vercel.svg"); setIconLoading(false); }}
+              onError={() => { setImgSrc("/images/default_plugin.png"); setIconLoading(false); }}
             />
           </div>
         </CardPreview>
