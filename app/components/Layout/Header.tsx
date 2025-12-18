@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Button, Tooltip, Text, Toolbar, ToolbarButton, TabList, Tab, SearchBox, Drawer, DrawerBody, Input } from "@fluentui/react-components";
+import { Button, Tooltip, Text, Toolbar, TabList, Tab, SearchBox, Drawer, DrawerBody, Input } from "@fluentui/react-components";
 import {WeatherSunny24Regular, WeatherMoon24Regular, Desktop24Regular, ArrowLeft16Regular, Navigation24Regular, Search24Regular, Dismiss24Regular} from "@fluentui/react-icons";
 import { useTheme } from "@/app/providers";
 import { useRouter, usePathname } from "next/navigation";
@@ -41,6 +41,7 @@ export default function Header() {
                                     className="w-9 h-9 object-contain"
                                 />
                                 <Text weight="bold" className="!text-[18px]">插件广场</Text>
+                                <span className="rounded-full bg-yellow-400 text-black px-2 py-1 text-xs font-medium">BETA</span>
                             </Link>
 
                             {/* 桌面端导航标签页 */}
