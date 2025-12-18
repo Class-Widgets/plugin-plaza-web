@@ -211,8 +211,8 @@ export default function PluginDetailPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* 顶部应用信息区域 */}
-      <section className="flex items-start gap-4">
-        <div className="w-24 h-24 flex items-center justify-center">
+      <section className="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div className="w-24 h-24 flex items-center justify-center mx-auto sm:mx-0">
           {!iconLoaded && (
             <Skeleton>
               <SkeletonItem shape="rectangle" style={{ width: 96, height: 96, borderRadius: 12 }} />
@@ -225,7 +225,7 @@ export default function PluginDetailPage() {
             onLoad={() => setIconLoaded(true)}
           />
         </div>
-         <div className="flex-1 min-w-0 space-y-2">
+         <div className="flex-1 min-w-0 space-y-2 text-center sm:text-left">
           {manifest ? (
             <>
               <Text weight="semibold" size={700} className="truncate">{manifest.name}</Text>
@@ -236,7 +236,7 @@ export default function PluginDetailPage() {
                   </div>
                 )}
                 {sectionTags.length > 0 && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                     {sectionTags.map((tag: string) => (
                       <Link key={tag} href={`/search?q=${encodeURIComponent(tag)}`} className="text-blue-600 dark:text-blue-400 hover:underline">{getTagName(tag)}</Link>
                     ))}
@@ -244,48 +244,50 @@ export default function PluginDetailPage() {
                 )}
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">{manifest.description}</div>
-              <div className="flex items-center gap-2 pt-2">
-                {manifest && releasePageUrl ? (
-                    <Menu positioning="below-end">
-                      <MenuTrigger disableButtonEnhancement>
-                        {(triggerProps) => (
-                            <SplitButton
-                                appearance={"primary"}
-                                primaryActionButton={{
-                                  onClick: () => window.open(releaseCwpluginUrl, "_blank"),
-                                }}
-                                icon={<ArrowDownloadRegular/>}
-                                menuButton={triggerProps}
-                                menuIcon={<ChevronDownRegular style={{ marginBottom: "1.75em" }}/>}
-                            >
-                              下载
-                            </SplitButton>
-                        )}
-                      </MenuTrigger>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 pt-2">
+                {/* 下载按钮（SplitButton） */}
+                <div className="flex-1 sm:flex-none">
+                  {manifest && releasePageUrl ? (
+                      <Menu positioning="below-end">
+                        <MenuTrigger disableButtonEnhancement>
+                          {(triggerProps) => (
+                              <SplitButton
+                                  appearance="primary"
+                                  primaryActionButton={{
+                                    onClick: () => window.open(releaseCwpluginUrl, "_blank"),
+                                  }}
+                                  icon={<ArrowDownloadRegular />}
+                                  menuButton={triggerProps}
+                                  menuIcon={<ChevronDownRegular style={{ marginBottom: "1.75em" }} />}
+                              >
+                                下载
+                              </SplitButton>
+                          )}
+                        </MenuTrigger>
 
-                      <MenuPopover>
-                        <MenuList>
-                          <MenuItem onClick={() => window.open(releaseZipUrl, "_blank")}>
-                            下载 ZIP 文件
-                          </MenuItem>
-                          <MenuItem onClick={() => window.open(releaseCwpluginUrl, "_blank")}>
-                            下载 Class Widgets 插件
-                          </MenuItem>
-                          <MenuItem onClick={() => window.open(releasePageUrl, "_blank")}>
-                            访问 Release 页面
-                          </MenuItem>
-                        </MenuList>
-                      </MenuPopover>
-                    </Menu>
-                ) : (
-                  <Link href={releaseZipUrl} className="inline-block">
-                    <Button appearance="primary">
-                      <ArrowDownloadRegular style={{ fontSize: 16, marginRight: 8 }} />
-                      下载
-                    </Button>
-                  </Link>
-                )}
-                <Button appearance="secondary" onClick={() => router.back()}>返回</Button>
+                        <MenuPopover>
+                          <MenuList>
+                            <MenuItem onClick={() => window.open(releaseZipUrl, "_blank")}>
+                              下载 ZIP 文件
+                            </MenuItem>
+                            <MenuItem onClick={() => window.open(releaseCwpluginUrl, "_blank")}>
+                              下载 Class Widgets 插件
+                            </MenuItem>
+                            <MenuItem onClick={() => window.open(releasePageUrl, "_blank")}>
+                              访问 Release 页面
+                            </MenuItem>
+                          </MenuList>
+                        </MenuPopover>
+                      </Menu>
+                  ) : (
+                      <Link href={releaseZipUrl} className="block">
+                        <Button appearance="primary">
+                          <ArrowDownloadRegular style={{ fontSize: 16, marginRight: 8 }} />
+                          下载
+                        </Button>
+                      </Link>
+                  )}
+                </div>
               </div>
             </>
           ) : (
@@ -302,10 +304,10 @@ export default function PluginDetailPage() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-15 gap-5 mt-12">
+      <div className="grid grid-cols-1 xl:grid-cols-15 gap-5 mt-12">
         {/* 主体左侧 说明 + 其他信息 */}
-        <div className="lg:col-span-10 space-y-4">
-          <Card className="!p-8 !gap-0">
+        <div className="xl:col-span-10 space-y-4">
+          <Card className="!p-4 sm:!p-8 !gap-0">
              <Text weight="semibold" size={500}>说明</Text>
              <Divider className="my-3" />
              {!readme ? (
@@ -325,7 +327,7 @@ export default function PluginDetailPage() {
              )}
            </Card>
  
-          <Card className="!p-8 !gap-0">
+          <Card className="!p-4 sm:!p-8 !gap-0">
              <Text weight="semibold" size={500}>其他信息</Text>
              <Divider className="my-3" />
              {manifest ? (
@@ -392,8 +394,8 @@ export default function PluginDetailPage() {
          </div>
  
          {/* 右侧 发现更多 */}
-         <aside className="lg:col-span-5">
-          <Card className="!p-8 !gap-0">
+         <aside className="xl:col-span-5">
+          <Card className="!p-4 sm:!p-8 !gap-0">
              <div className="flex items-center justify-between">
                <Text weight="semibold" size={500}>发现更多</Text>
                {sectionTags.length > 0 && <Link href={`/search?q=${encodeURIComponent(sectionTags[0])}`} className="text-blue-600 dark:text-blue-400 hover:underline text-xs">更多</Link>}
